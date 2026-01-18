@@ -1,4 +1,4 @@
-name: Playwright E2E
+name: Playwright 
 
 on:
   push:
