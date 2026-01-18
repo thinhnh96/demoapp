@@ -1,0 +1,12 @@
+{
+  "HomePage": {
+    "solutionsButton": {
+      "role": "button",
+      "name": "Click link to open Solutions"
+    },
+    "solutionsDropdown": "nav.primary-navigation-tab-nav.show ul.tab-nav-items",
+    "solutionsDropdownItem": {
+      "role": "button"
+    }
+  }
+}
