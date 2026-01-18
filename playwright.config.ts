@@ -39,7 +39,7 @@ export default defineConfig({
   // sMulti-project
   projects: [
     // ========================
-    // 🔐 AUTH SETUP (SAVE SESSION)
+    // AUTH SETUP (SAVE SESSION)
     // ========================
     {
       name: 'setup-chrome',
@@ -57,7 +57,7 @@ export default defineConfig({
     },
 
     // ========================
-    // 🔑 LOGIN (NO SESSION)
+    // LOGIN (NO SESSION)
     // ========================
     {
       name: 'login-chrome',
@@ -75,7 +75,7 @@ export default defineConfig({
     },
 
     // ========================
-    // 🛒 ORDER FLOW (REUSE AUTH)
+    // ORDER FLOW (REUSE AUTH)
     // ========================
     {
       name: 'order-chrome',
