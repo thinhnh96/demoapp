@@ -1,107 +1,46 @@
-# name: Playwright E2E
+name: Playwright E2E
 
-# on:
-#   push:
-#     branches: [ "main", "develop" ]
-#   pull_request:
-#     branches: [ "main", "develop" ]
-#   workflow_dispatch:    
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+  workflow_dispatch:    
 
-# jobs:
-#   playwright:
-#     name: Playwright Tests
-#     runs-on: ubuntu-latest
+jobs:
+  playwright:
+    name: Playwright Tests
+    runs-on: ubuntu-latest
 
-#     timeout-minutes: 30
+    timeout-minutes: 30
 
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v4
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: 18
-#           cache: 'npm'
-#       - name: Install dependencies
-#         run: npm ci
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
 
-#       - name: Install Playwright Browsers
-#         run: npx playwright install --with-deps
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
 
-#       - name: Setup environment variables
-#         run: |
-#           echo "ENV=ci" >> $GITHUB_ENV
-#           echo "BASE_URL=https://www.saucedemo.com" >> $GITHUB_ENV
-#           echo "USERNAME=${{ secrets.USERNAME }}" >> $GITHUB_ENV
-#           echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
-#       - name: Run Playwright tests
-#         run: npx playwright test
+      - name: Setup environment variables
+        run: |
+          echo "ENV=ci" >> $GITHUB_ENV
+          echo "BASE_URL=https://www.saucedemo.com" >> $GITHUB_ENV
+          echo "USERNAME=${{ secrets.USERNAME }}" >> $GITHUB_ENV
+          echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
+      - name: Run Playwright tests
+        run: npx playwright test
 
-#       - name: Upload Playwright Report
-#         if: always()
-#         uses: actions/upload-artifact@v4
-#         with:
-#           name: playwright-report
-#           path: playwright-report
-#           retention-days: 7
-import 'dotenv/config';
-
-function getEnv(
-  name: string,
-  options?: { required?: boolean; defaultValue?: string }
-): string {
-  const value = process.env[name];
-
-  if (!value) {
-    if (options?.required) {
-      throw new Error(`❌ Missing environment variable: ${name}`);
-    }
-    return options?.defaultValue ?? '';
-  }
-
-  return value;
-}
-
-const ENV = process.env.ENV ?? 'local';
-const isCI = !!process.env.CI;
-
-export const env = {
-  name: ENV,
-  isCI,
-
-  baseUrl: getEnv('BASE_URL', {
-    required: !isCI,
-    defaultValue: 'https://www.saucedemo.com',
-  }),
-
-  user: {
-    username: getEnv('USERNAME', { required: !isCI }),
-    password: getEnv('PASSWORD', { required: !isCI }),
-  },
-
-  timeouts: {
-    action: 10_000,
-    navigation: 30_000,
-  },
-};
-
-/**
- * 🔍 LOG ENV (SAFE)
- * - Không log secret
- * - Không cảnh báo .env.ci trong CI
- */
-if (!isCI) {
-  console.log(`ℹ️ Running in ENV=${ENV}`);
-}
-
-console.log('✅ Playwright ENV loaded:', {
-  name: env.name,
-  isCI: env.isCI,
-  baseUrl: env.baseUrl,
-  user: {
-    username: env.user.username ? '***' : '',
-    password: env.user.password ? '***' : '',
-  },
-  timeouts: env.timeouts,
-});
-
+      - name: Upload Playwright Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
