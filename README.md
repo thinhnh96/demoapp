@@ -1,22 +1,50 @@
 # 🎭 Playwright Automation Test Framework
 
-> **Purpose:** Automation testing framework using **Playwright + TypeScript**, designed with **real-world best practices**, optimized for **multi-environment**, **CI/CD**, and **fast execution using stored authentication sessions**.
+## Overview
 
-This project is suitable as **technical documentation for interview submission** and demonstrates practical experience with scalable test automation architecture.
+This project is a production-ready Playwright automation test framework built to demonstrate Senior QA Automation practices, including:
 
----
+- Clean architecture (Page Object Model)
 
-## 1️⃣ Technology Stack
+- Multi-environment configuration (local / qa / staging / ci)
 
-* **Playwright** – E2E testing framework
-* **TypeScript** – Strongly typed test code
-* **Node.js** – Runtime environment
-* **dotenv** – Environment variable management
-* **HTML Reporter** – Test execution reports
+- Session reuse for fast execution
 
----
+- Parallel cross-browser testing
 
-## 2️⃣ Project Structure
+- CI/CD integration with GitHub Actions
+
+- Secure secrets handling (GitHub Secrets)
+
+- Real-world test flows (Login, Checkout)
+
+Target demo website:
+👉 https://www.saucedemo.com (industry-standard public demo site)
+
+## Goals of This Project
+
+- This repository is designed to prove:
+
+- Ability to design a scalable automation framework
+
+- Understanding of CI/CD pipelines
+
+- Experience with environment management & secrets
+
+- Knowledge of test optimization (storageState, parallelism)
+
+- Senior-level thinking, not just writing tests
+
+## 1. Tech Stack
+Tool	                  Purpose
+Playwright	            E2E Automation
+TypeScript	            Strong typing & maintainability
+Page Object Model	      Clean test architecture
+dotenv	                Environment config (local only)
+GitHub Actions	        CI pipeline
+GitHub Secrets	        Secure credentials
+
+## 2. Project Structure
 
 .
 ├── configs/
@@ -60,7 +88,7 @@ This project is suitable as **technical documentation for interview submission**
 
 ---
 
-## 3️⃣ Environment Configuration
+## 3. Environment Configuration
 
 ### Supported Environments
 
