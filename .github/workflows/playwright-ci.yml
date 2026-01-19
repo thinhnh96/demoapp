@@ -1,4 +1,4 @@
-name: Playwright E2E
+name: Playwright 
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
     name: Playwright Tests
     runs-on: ubuntu-latest
 
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
