@@ -3,7 +3,7 @@ import { InventoryPage } from '../../pages/InventoryPage';
 import { CartPage } from '../../pages/CartPage';
 import { ITEMS } from '../test-data/items';
 
-test.describe('Cart functionality', () => {
+test.describe('@smoketest @regression Cart functionality ', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/inventory.html');

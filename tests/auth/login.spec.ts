@@ -4,7 +4,7 @@ import { LoginPage } from '../../pages/LoginPage';
 import { users } from '../test-data/users';
 import { env } from '../../configs/env';
 
-test.describe('Login – Edge Cases', () => {
+test.describe('@smoketest @critical Login – Edge Cases ', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/');

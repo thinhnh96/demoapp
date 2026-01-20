@@ -6,7 +6,7 @@ import { CheckoutPage } from '../../pages/CheckoutPage';
 import { ITEMS } from '../test-data/items';
 import { USERS } from '../test-data/datacheckout'
 
-test.describe('Checkout flow', () => {
+test.describe('@regression Checkout flow @regression ', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/inventory.html');
