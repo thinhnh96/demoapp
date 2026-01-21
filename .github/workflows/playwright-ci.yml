@@ -100,11 +100,9 @@
 name: Playwright E2E
 
 on:
-  # Trigger từ repo appcode
   repository_dispatch:
     types: [ run-e2e ]
 
-  # Chạy tay
   workflow_dispatch:
     inputs:
       env:
@@ -119,8 +117,11 @@ on:
         description: "Base URL"
         required: true
         default: "https://www.saucedemo.com"
+      image:
+        description: "Playwright image (leave empty = latest)"
+        required: false
+        default: ""
 
-  # Nightly regression
   schedule:
     - cron: "0 22 * * *"
 
@@ -129,9 +130,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
-    # 🔥 FIX CHÍNH Ở ĐÂY
+    # 🔥 MẶC ĐỊNH latest – override khi manual
     container:
-      image: mcr.microsoft.com/playwright:latest
+      image: >-
+        ${{ github.event_name == 'workflow_dispatch' && inputs.image != ''
+            && inputs.image
+            || 'mcr.microsoft.com/playwright:latest' }}
 
     env:
       PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
@@ -143,13 +147,13 @@ jobs:
       - uses: actions/checkout@v4
 
       # -----------------------
-      # Install deps (KHÔNG install browser)
+      # Install deps (NO browser install)
       # -----------------------
       - name: Install dependencies
         run: npm ci
 
       # -----------------------
-      # Setup ENV (single source of truth)
+      # Setup ENV
       # -----------------------
       - name: Setup environment variables
         run: |
@@ -175,8 +179,9 @@ jobs:
       # -----------------------
       # Debug
       # -----------------------
-      - name: Debug ENV
+      - name: Debug
         run: |
+          echo "Image: ${{ job.container.image }}"
           echo "ENV=$ENV"
           echo "BASE_URL=$BASE_URL"
           echo "TAG=$TAG"
@@ -189,7 +194,7 @@ jobs:
           npx playwright test --grep "$TAG"
 
       # -----------------------
-      # Upload report
+      # Report
       # -----------------------
       - name: Upload report
         if: always()
@@ -198,6 +203,7 @@ jobs:
           name: playwright-report
           path: playwright-report
           retention-days: 7
+
 
 
 
