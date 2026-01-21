@@ -2,21 +2,21 @@ import { defineConfig, devices } from '@playwright/test';
 import { env } from './configs/env';
 
 /**
- * Debug mode for loading env 
- * 
+ * Debug mode for loading env
  */
 console.log('✅ Playwright ENV loaded:', env);
+
+const isCI = !!process.env.CI;
 
 export default defineConfig({
   testDir: './tests',
 
   fullyParallel: true,
 
-  forbidOnly: !!process.env.CI,
+  forbidOnly: isCI,
 
-  retries: env.isCI ? 2 : 0,
-
-  workers: env.isCI ? 2 : undefined,
+  retries: isCI ? 2 : 0,
+  workers: isCI ? 2 : undefined,
 
   reporter: [
     ['html', { open: 'never' }],
@@ -36,7 +36,6 @@ export default defineConfig({
     headless: true,
   },
 
-  // sMulti-project
   projects: [
     // ========================
     // AUTH SETUP (SAVE SESSION)
