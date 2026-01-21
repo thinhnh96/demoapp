@@ -9,7 +9,7 @@ on:
 
   # Nightly regression
   schedule:
-    - cron: "0 22 * * *"   # 05:00 AM VN time
+    - cron: "0 22 * * *"    
 
   workflow_dispatch:
     inputs:
