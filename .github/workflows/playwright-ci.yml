@@ -85,23 +85,23 @@
 #           name: playwright-report
 #           path: playwright-report
 #           retention-days: 7
+
 name: Playwright E2E
 
 on:
+  # Trigger from repo appcode
   repository_dispatch:
-    types: [run-e2e]
+    types: [ run-e2e ]
 
-  schedule:
-    - cron: "0 22 * * *" # 05:00 VN time
-
+  # Manual
   workflow_dispatch:
     inputs:
-      target_env:
-        description: "Target environment (qa/dev)"
+      env:
+        description: "Environment (qa | staging)"
         required: true
         default: "qa"
-      test_tag:
-        description: "Test tag (@smoke/@critical/@regression)"
+      tag:
+        description: "Test tag (@smoke | @critical | @regression)"
         required: true
         default: "@smoke"
       base_url:
@@ -109,14 +109,24 @@ on:
         required: true
         default: "https://www.saucedemo.com"
 
+  # Nightly regression
+  schedule:
+    - cron: "0 22 * * *"  
+
 jobs:
   playwright:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
     steps:
+      # -----------------------
+      # Checkout
+      # -----------------------
       - uses: actions/checkout@v4
 
+      # -----------------------
+      # Setup Node
+      # -----------------------
       - uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -126,39 +136,49 @@ jobs:
       - run: npx playwright install --with-deps
 
       # -----------------------
-      # Setup ENV (ONE SOURCE OF TRUTH)
+      # Setup ENV (single source of truth)
       # -----------------------
       - name: Setup environment variables
         run: |
-          echo "CI=true" >> $GITHUB_ENV
-          echo "USERNAME=${{ secrets.USERNAME }}" >> $GITHUB_ENV
-          echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
-
           if [[ "${{ github.event_name }}" == "repository_dispatch" ]]; then
-            echo "TARGET_ENV=${{ github.event.client_payload.env }}" >> $GITHUB_ENV
+            echo "ENV=${{ github.event.client_payload.env }}" >> $GITHUB_ENV
             echo "BASE_URL=${{ github.event.client_payload.base_url }}" >> $GITHUB_ENV
             echo "TAG=${{ github.event.client_payload.tag }}" >> $GITHUB_ENV
 
-          elif [[ "${{ github.event_name }}" == "schedule" ]]; then
-            echo "TARGET_ENV=qa" >> $GITHUB_ENV
-            echo "BASE_URL=https://www.saucedemo.com" >> $GITHUB_ENV
-            echo "TAG=@regression" >> $GITHUB_ENV
-
-          else
-            echo "TARGET_ENV=${{ inputs.target_env }}" >> $GITHUB_ENV
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "ENV=${{ inputs.env }}" >> $GITHUB_ENV
             echo "BASE_URL=${{ inputs.base_url }}" >> $GITHUB_ENV
-            echo "TAG=${{ inputs.test_tag }}" >> $GITHUB_ENV
+            echo "TAG=${{ inputs.tag }}" >> $GITHUB_ENV
+
+          elif [[ "${{ github.event_name }}" == "schedule" ]]; then
+            echo "ENV=staging" >> $GITHUB_ENV
+            echo "BASE_URL=https://staging.saucedemo.com" >> $GITHUB_ENV
+            echo "TAG=@regression" >> $GITHUB_ENV
           fi
 
+          echo "USERNAME=${{ secrets.USERNAME }}" >> $GITHUB_ENV
+          echo "PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
+
       # -----------------------
-      # Run tests
+      # Debug
+      # -----------------------
+      - name: Debug ENV
+        run: |
+          echo "ENV=$ENV"
+          echo "BASE_URL=$BASE_URL"
+          echo "TAG=$TAG"
+
+      # -----------------------
+      # Run Playwright
       # -----------------------
       - name: Run Playwright
         run: |
-          echo "Running $TAG on $TARGET_ENV ($BASE_URL)"
           npx playwright test --grep "$TAG"
 
-      - name: Upload Report
+      # -----------------------
+      # Report
+      # -----------------------
+      - name: Upload report
         if: always()
         uses: actions/upload-artifact@v4
         with:
