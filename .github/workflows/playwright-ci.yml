@@ -181,7 +181,6 @@ jobs:
       # -----------------------
       - name: Debug
         run: |
-          echo "Image: ${{ job.container.image }}"
           echo "ENV=$ENV"
           echo "BASE_URL=$BASE_URL"
           echo "TAG=$TAG"
