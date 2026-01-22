@@ -130,7 +130,7 @@ on:
   # Nightly regression
   schedule:
     # - cron: "0 22 * * *"
-    - cron: "07 1 * * *"
+    - cron: "30 1 * * *"
 
 jobs:
   playwright:
