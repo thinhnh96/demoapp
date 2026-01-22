@@ -1,23 +1,26 @@
-import fs from 'fs';
+// import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
 
 // ======================
-// Detect environment
+// Detect ENV
 // ======================
-const ENV = process.env.ENV || 'qa';
+const ENV = process.env.ENV || 'local';
+const isCI = !!process.env.CI;
 
 // ======================
-// Load env file
+// Load env file (LOCAL ONLY)
 // ======================
-const envFile = `.env.${ENV}`;
-const envPath = path.resolve(process.cwd(), 'env', envFile);
+if (!isCI) {
+  const envFile = `.env.${ENV}`;
+  const envPath = path.resolve(process.cwd(), 'env', envFile);
 
-if (fs.existsSync(envPath)) {
-  dotenv.config({ path: envPath });
-  console.log(`✅ Loaded /env/${envFile}`);
-} else {
-  console.warn(`⚠️ /env/${envFile} not found`);
+  if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath });
+    console.log(`✅ Loaded /env/${envFile}`);
+  } else {
+    console.warn(`⚠️ /env/${envFile} not found`);
+  }
 }
 
 // ======================
@@ -28,16 +31,16 @@ function getEnv(name: string, defaultValue = ''): string {
 }
 
 // ======================
-// Export ENV
+// Export
 // ======================
 export const env = {
   env: ENV,
 
-  baseUrl: getEnv('BASE_URL', 'https://www.saucedemo.com'),
+  baseUrl: getEnv('BASE_URL'),
 
   user: {
-    username: getEnv('USERNAME', 'standard_user'),
-    password: getEnv('PASSWORD', 'secret_sauce'),
+    username: getEnv('USERNAME'),
+    password: getEnv('PASSWORD'),
   },
 
   timeouts: {
@@ -47,7 +50,7 @@ export const env = {
 };
 
 // ======================
-// Debug log
+// Debug
 // ======================
 console.log('✅ Playwright ENV loaded:', {
   env: env.env,
