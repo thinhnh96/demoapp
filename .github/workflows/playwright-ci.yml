@@ -179,7 +179,7 @@ jobs:
 
           elif [[ "${{ github.event_name }}" == "schedule" ]]; then
             echo "ENV=staging" >> $GITHUB_ENV
-            echo "BASE_URL=https://staging.saucedemo.com" >> $GITHUB_ENV
+            echo "BASE_URL=https://saucedemo.com" >> $GITHUB_ENV
             echo "TAG=@regression" >> $GITHUB_ENV
           fi
 
